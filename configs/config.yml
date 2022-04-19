@@ -1,0 +1,22 @@
+server:
+  addr: 0.0.0.0:2830
+  timeout: 1s
+data:
+  database:
+    driver: mysql
+    source: root:root@tcp(127.0.0.1:3306)/test
+  redis:
+    addr: 127.0.0.1:6379
+    read_timeout: 0.2s
+    write_timeout: 0.2s
+log:
+  level: info
+  output: file
+  development: true
+  rotate:
+    filename: app.log
+    maxsize: 10
+    maxage: 7
+    maxbackups: 
+    localtime: 
+    compress: 
