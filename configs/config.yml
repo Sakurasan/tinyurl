@@ -1,6 +1,7 @@
 server:
   addr: 0.0.0.0:2830
-  timeout: 1s
+  timeout: 2s
+  domain: http://🐮🍺.cf/
 data:
   database:
     driver: mysql
@@ -11,10 +12,10 @@ data:
     write_timeout: 0.2s
 log:
   level: info
-  output: file
+  output: std #file
   development: true
   rotate:
-    filename: app.log
+    filename: ./app.log
     maxsize: 10
     maxage: 7
     maxbackups: 

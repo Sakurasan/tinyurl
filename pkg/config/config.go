@@ -14,7 +14,9 @@ type Config struct {
 }
 
 type Server struct {
-	Addr string `yaml:"addr"`
+	Addr     string `yaml:"addr"`
+	Domain   string `yaml:"domain"`
+	Lru_Size int    `yaml:"lru_size"`
 }
 
 type Log struct {
@@ -34,7 +36,7 @@ type Rotate struct {
 }
 
 type Data struct {
-	DB    DB `yaml:"database"`
+	DB    `yaml:"database"`
 	Redis `yaml:"redis"`
 }
 
