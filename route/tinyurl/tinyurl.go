@@ -54,7 +54,7 @@ func TinyUrl(c flamego.Context, w http.ResponseWriter, form Param, errs binding.
 		_, _ = c.ResponseWriter().Write([]byte(fmt.Sprintf("Oops! Error occurred: %v", err)))
 		return
 	}
-	if !strings.HasPrefix(form.LongUrl, "http://") || !strings.HasPrefix(form.LongUrl, "https://") {
+	if !strings.HasPrefix(form.LongUrl, "http://") && !strings.HasPrefix(form.LongUrl, "https://") {
 		form.LongUrl = "http://" + form.LongUrl
 	}
 	logger.Info(c.Request().Context(), form.LongUrl)
