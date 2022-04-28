@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 	"tinyurl/pkg/base62"
 	"tinyurl/pkg/config"
@@ -53,18 +54,15 @@ func TinyUrl(c flamego.Context, w http.ResponseWriter, form Param, errs binding.
 		_, _ = c.ResponseWriter().Write([]byte(fmt.Sprintf("Oops! Error occurred: %v", err)))
 		return
 	}
+	if !strings.HasPrefix(form.LongUrl, "http://") || !strings.HasPrefix(form.LongUrl, "https://") {
+		form.LongUrl = "http://" + form.LongUrl
+	}
 	logger.Info(c.Request().Context(), form.LongUrl)
 	var tm = data.TinyUrl{}
 	tm.LongUrl = form.LongUrl
-	tm.ShortUrl = base62.TinyUrl(form.LongUrl + time.Now().String())
+	tm.ShortUrl = base62.TinyUrl(form.LongUrl + "?" + time.Now().String())
 	if err := db.Create(&tm).Error; err != nil {
 		logger.Info(c.Request().Context(), err.Error())
-		// bytejson, _ := json.Marshal(map[string]interface{}{
-		// 	"code": http.StatusBadGateway,
-		// 	"msg":  "please try again",
-		// })
-		// io.WriteString(c.ResponseWriter(), string(bytejson))
-		// return
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"code": http.StatusBadGateway,
@@ -78,19 +76,10 @@ func TinyUrl(c flamego.Context, w http.ResponseWriter, form Param, errs binding.
 		"msg":      "success",
 		"shortUrl": cfg.Server.Domain + tm.ShortUrl,
 	})
-	// bytejson, err := json.Marshal(map[string]interface{}{
-	// 	"code":     http.StatusOK,
-	// 	"msg":      "success",
-	// 	"shortUrl": tm.ShortUrl,
-	// })
-	// if err != nil {
-	// 	logger.Error(c.Request().Context(), err.Error())
-	// }
-	// io.WriteString(c.ResponseWriter(), string(bytejson))
 
 }
 
-func TinyUtlTo(c flamego.Context, logger *log.Logger, db *gorm.DB, l *lru.Cache, cfg *config.Config) {
+func TinyUrlTo(c flamego.Context, logger *log.Logger, db *gorm.DB, l *lru.Cache, cfg *config.Config) {
 	tiny := c.Param("url")
 	if v, ok := l.Get(tiny); ok {
 		c.Redirect(v.(string), http.StatusFound)

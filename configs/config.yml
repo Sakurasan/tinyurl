@@ -5,7 +5,7 @@ server:
 data:
   database:
     driver: mysql
-    source: root:root@tcp(127.0.0.1:3306)/test
+    source: tinyurl:tinyurl@tcp(127.0.0.1:3306)/tinyurl?charset=utf8mb4&parseTime=True&loc=Local
   redis:
     addr: 127.0.0.1:6379
     read_timeout: 0.2s
@@ -16,8 +16,8 @@ log:
   development: true
   rotate:
     filename: ./app.log
-    maxsize: 10
-    maxage: 7
-    maxbackups: 
-    localtime: 
-    compress: 
+    maxsize: 10  #Mb
+    maxage: 7 #day
+    # maxbackups: 
+    # localtime: 
+    # compress: 

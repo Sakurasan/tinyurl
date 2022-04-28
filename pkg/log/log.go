@@ -85,11 +85,11 @@ func getConsoleEncoder() zapcore.Encoder {
 func getFileWriter(c config.Rotate) zapcore.WriteSyncer {
 	logger := &lumberjack.Logger{
 		Filename:   c.Filename,
-		MaxSize:    c.MaxSize,
-		MaxAge:     c.MaxAge,
-		MaxBackups: c.MaxBackups,
-		LocalTime:  c.LocalTime,
-		Compress:   c.Compress,
+		MaxSize:    c.MaxSize,    //Mb
+		MaxAge:     c.MaxAge,     //days
+		MaxBackups: c.MaxBackups, //int backup maximum number of old log files
+		LocalTime:  c.LocalTime,  //bool  backup files is the computer's local time
+		Compress:   c.Compress,   //bool
 	}
 	return zapcore.AddSync(logger)
 }

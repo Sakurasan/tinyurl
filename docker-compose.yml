@@ -1,0 +1,42 @@
+version: '3'
+services:
+  tinyurl:
+    # The official v2 Traefik docker image
+    image: mirrors2/tinyurl
+    container_name: tinyurl
+    restart: always
+    ports:
+      - "2830:2830"
+    # volumes: #default log term
+    #     - $PWD/log:/app/tinyurl/log
+    #     - config.yml:/app/tinyurl/configs/config.yml
+    entrypoint:
+      - DSN=tinyurl:tinyurl@tcp(db:3306)/tinyurl?charset=utf8mb4
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        
+  tinyurl_db:
+    image: mariadb
+    container_name: tinyurl_db
+    restart: always
+    networks:
+      - gitea
+    expose:
+      - 3306    
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci  
+    environment:
+      - MYSQL_ROOT_PASSWORD=supermen
+      - MYSQL_DATABASE=tinyurl
+      - MYSQL_USER=tinyurl
+      - MYSQL_PASSWORD=tinyurl
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./db:/var/lib/mysql
+      # 标准 Linux 系统下使用
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro      
+    # healthcheck:
+    #   test: ["CMD-SHELL", "/etc/init.d/mysql status"]
+    #   interval: 30s

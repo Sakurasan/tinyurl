@@ -1,7 +1,7 @@
 FROM golang:alpine as builder
+LABEL anther="github.com/Sakurasan"
 # RUN apt install -y git make
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && apk update && apk --no-cache add make git 
-LABEL anther="cjun"
 WORKDIR /tinyurl
 COPY . /tinyurl
 ENV GO111MODULE=on 
