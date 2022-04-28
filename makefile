@@ -20,6 +20,13 @@ LDFlags=" \
 build:
 	mkdir -p bin/ && go build -ldflags $(LDFlags) -o ./bin/ ./...
 
+.PHONY:buildx
+buildx:
+	docker run --privileged --rm tonistiigi/binfmt --install all
+	docker buildx create --use --name xbuilder
+	docker buildx inspect xbuilder --bootstrap
+	docker buildx build --platform linux/amd64,linux/arm64 -t mirrors2/tinyurl:latest . --push
+
 .PHONY: clean
 # clean
 clean:
